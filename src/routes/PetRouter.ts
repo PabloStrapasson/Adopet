@@ -14,7 +14,7 @@ router.post("/", (req, res) => petController.criaPet(req, res));
 router.get("/", (req, res) => petController.listaPets(req, res));
 router.get("/search", (req, res) => petController.buscaPetGenerico(req, res));
 router.put("/:id", (req, res) => petController.atualizaPets(req, res));
-router.put("/:pet_id/:id_adotante", (req, res) => petController.adotaPet(req, res));
+router.put("/:pet_id/:adotante_id", (req, res) => petController.adotaPet(req, res));
 router.delete("/:id", (req, res) => petController.deletaPet(req, res));
 
 export default router;
