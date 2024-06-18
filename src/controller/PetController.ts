@@ -42,9 +42,6 @@ export default class PetController {
             req.body as PetEntity
         );
 
-        if (!success) {
-            return res.status(404).json({ error: message });
-        }
         return res.sendStatus(204);
     }
 
@@ -53,9 +50,6 @@ export default class PetController {
 
         const { success, message } = await this.repository.deletaPet(Number(id));
 
-        if (!success) {
-          return res.status(404).json({ error: message });
-        }
         return res.sendStatus(204);
     }
 
@@ -65,9 +59,7 @@ export default class PetController {
         Number(pet_id),
         Number(adotante_id)
       );
-      if (!success) {
-        return res.status(404).json({ error: message });
-      }
+      
       return res.sendStatus(204);
     }
 

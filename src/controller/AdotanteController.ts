@@ -11,22 +11,18 @@ export default class AdotanteController {
     }
 
     async criaAdotante(req:Request<AdotanteRequestParamsType, {}, AdotanteRequestBodyType>, res:Response<AdotanteResponsetBodyType>) {
-        try {
-          const { nome, celular, endereco, foto, senha } = <AdotanteEntity>req.body;
+      const { nome, celular, endereco, foto, senha } = <AdotanteEntity>req.body;
           
-          const novoAdotante = new AdotanteEntity(
-            nome,
-            senha,
-            celular,
-            foto,
-            endereco
-          );
-      
-          await this.repository.criaAdotante(novoAdotante);
-          return res.status(201).json({ data: { id:novoAdotante.id, nome, celular, endereco } });
-        } catch (error) {
-          return res.status(500).json({ error: 'Erro ao criar o adotante' });
-        }
+      const novoAdotante = new AdotanteEntity(
+        nome,
+        senha,
+        celular,
+        foto,
+        endereco
+      );
+  
+      await this.repository.criaAdotante(novoAdotante);
+      return res.status(201).json({ data: { id:novoAdotante.id, nome, celular, endereco } });
     }
 
     async listaAdotantes(req:Request<AdotanteRequestParamsType, {}, AdotanteRequestBodyType>, res:Response<AdotanteResponsetBodyType>) {
@@ -49,10 +45,6 @@ export default class AdotanteController {
         req.body as AdotanteEntity
       );
   
-      if (!success) {
-        return res.status(404).json({ error: message });
-      }
-  
       return res.sendStatus(204);
     }
 
@@ -62,10 +54,7 @@ export default class AdotanteController {
       const { success, message } = await this.repository.deletaAdotante(
         Number(id)
       );
-  
-      if (!success) {
-        return res.status(404).json({ error: message });
-      }
+
       return res.sendStatus(204);
     }
 
@@ -74,9 +63,6 @@ export default class AdotanteController {
   
       const { success, message } = await this.repository.atualizaEnderecoAdotante( Number(id), req.body );
   
-      if (!success) {
-        return res.status(404).json({ error: message });
-      }
       return res.sendStatus(204);
     }    
 }
