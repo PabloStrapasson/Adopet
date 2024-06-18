@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import EnumEspecie from "../enum/EnumEspecie";
-import EnumPorte from "../enum/EnumPorte";
 import PetRepository from "../repositories/PetRepository";
 import PetEntity from "../entities/PetEntity";
 import { PetRequestBodyType, PetRequestParamsType, PetResponsetBodyType } from "../types/PetTypes";
