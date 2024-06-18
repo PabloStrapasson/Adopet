@@ -1,11 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import * as yup from "yup";
 import { AdotanteRequestBodyType, AdotanteRequestParamsType, AdotanteResponsetBodyType } from "../../types/AdotanteTypes";
+import * as yup from "yup";
+import { pt } from "yup-locale-pt";
+
+yup.setLocale(pt);
 
 const esquemaBodyAdotante: yup.ObjectSchema<Omit<AdotanteRequestBodyType, "endereco">> = yup.object({
     nome: yup.string().defined().required(),
-    senha: yup.string().defined().required().min(6),
-    celular: yup.string().defined().required(),
+    senha: yup.string()
+              .defined()
+              .required()
+              .min(6)
+              .matches(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/gm, "senha inválida"),
+    celular: yup.string()
+                .defined()
+                .required()
+                .matches(/^(\(?[0-9]{2}\)?)? ?([0-9]{4,5})-?([0-9]{4})$/gm, "número de telefone inválido"),
     foto: yup.string().optional()
   })
 

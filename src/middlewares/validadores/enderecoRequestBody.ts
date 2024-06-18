@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import * as yup from "yup";
 import EnderecoEntity from "../../entities/EnderecoEntity";
+import * as yup from "yup";
+import { pt } from "yup-locale-pt";
+
+yup.setLocale(pt);
 
 const esquemaBodyEndereco: yup.ObjectSchema<Omit<EnderecoEntity, "id">> = yup.object({
     cidade: yup.string().defined().required(),
