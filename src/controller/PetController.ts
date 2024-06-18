@@ -13,12 +13,7 @@ export default class PetController {
 
     async criaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const { nome, especie, porte, adotado, dataDeNascimento } = <PetEntity>req.body;
-        if(!Object.values(EnumEspecie).includes(especie)){
-            return res.status(400).json({ error: "especie inválida" });
-        }
-        if(!(porte && porte in EnumPorte)){
-          return res.status(400).json({ error: "porte inválido" });
-      }
+      
         const novoPet = new PetEntity(nome, especie, dataDeNascimento, adotado, porte );
         novoPet.nome = nome;
         novoPet.especie = especie;
@@ -36,7 +31,7 @@ export default class PetController {
             id: pet.id,
             nome:pet.nome,
             especie: pet.especie,
-            porte: pet.porte
+            porte: pet.porte !== null? pet.porte: undefined,
           }
         })
         return res.status(200).json({ data: pets });

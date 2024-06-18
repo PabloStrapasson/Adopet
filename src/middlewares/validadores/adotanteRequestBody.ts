@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AdotanteRequestBodyType, AdotanteRequestParamsType, AdotanteResponsetBodyType } from "../../types/AdotanteTypes";
+import { AdotanteRequestBodyType } from "../../types/AdotanteTypes";
 import * as yup from "yup";
 import { pt } from "yup-locale-pt";
 

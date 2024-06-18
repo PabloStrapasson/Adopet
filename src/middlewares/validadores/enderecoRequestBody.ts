@@ -10,7 +10,7 @@ const esquemaBodyEndereco: yup.ObjectSchema<Omit<EnderecoEntity, "id">> = yup.ob
     estado: yup.string().defined().required(),
   })
 
-const validadorBodyEndreco = async (req: Request, res: Response, next: NextFunction) => {
+const validadorBodyEndereco = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await esquemaBodyEndereco.validate(req.body, { abortEarly: false });
         return next();
@@ -25,4 +25,4 @@ const validadorBodyEndreco = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export { validadorBodyEndreco };
+export { validadorBodyEndereco };
