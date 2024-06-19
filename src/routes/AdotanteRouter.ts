@@ -16,6 +16,6 @@ router.post("/", validadorAdotante, (req, res) => adotanteController.criaAdotant
 router.get("/", (req, res) => adotanteController.listaAdotantes(req, res));
 router.put("/:id", verificaIdMiddleware, (req, res) => adotanteController.atualizaAdotante(req, res));
 router.delete("/:id", verificaIdMiddleware, (req, res) => adotanteController.deletaAdotante(req, res));
-router.patch("/:id", verificaIdMiddleware, validadorEndereco,(req, res) => adotanteController.atualizaEnderecoAdotante(req, res));
+router.patch("/:id", verificaIdMiddleware, validadorEndereco, (req, res) => adotanteController.atualizaEnderecoAdotante(req, res));
 
 export default router;

@@ -7,5 +7,6 @@ export const verificaIdMiddleware = ( req:Request, res:Response, next:NextFuncti
         if(!Number.isInteger(Number(params[param]))) {
             throw new BadRequest(`O parametro ${param} deve ser um número inteiro`);
         }
+        next();
     }
 }

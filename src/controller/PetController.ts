@@ -2,12 +2,11 @@ import { Request, Response } from "express";
 import PetRepository from "../repositories/PetRepository";
 import PetEntity from "../entities/PetEntity";
 import { PetRequestBodyType, PetRequestParamsType, PetResponsetBodyType } from "../types/PetTypes";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 export default class PetController {
 
-    constructor(private repository:PetRepository){
-
-    }
+    constructor(private repository:PetRepository){ }
 
     async criaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const { nome, especie, porte, adotado, dataDeNascimento } = <PetEntity>req.body;
@@ -19,7 +18,7 @@ export default class PetController {
         novoPet.adotado = adotado;
         novoPet.dataDeNascimento = dataDeNascimento;
         await this.repository.criaPet(novoPet);
-        return res.status(201).json({ data: { id:novoPet.id, nome, especie, porte } });
+        return res.status(EnumHttpStatusCode.CREATED).json({ data: { id:novoPet.id, nome, especie, porte } });
     }
 
     async listaPets(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
@@ -32,7 +31,7 @@ export default class PetController {
             porte: pet.porte !== null? pet.porte: undefined,
           }
         })
-        return res.status(200).json({ data: pets });
+        return res.status(EnumHttpStatusCode.OK).json({ data: pets });
     }
 
     async atualizaPets(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
@@ -42,7 +41,7 @@ export default class PetController {
             req.body as PetEntity
         );
 
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async deletaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
@@ -50,7 +49,7 @@ export default class PetController {
 
         const { success, message } = await this.repository.deletaPet(Number(id));
 
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async adotaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
@@ -60,13 +59,13 @@ export default class PetController {
         Number(adotante_id)
       );
       
-      return res.sendStatus(204);
+      return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async buscaPetGenerico(req:Request, res:Response) {
       const { campo, valor } = req.query;
       const listaPets = await this.repository.buscaPetGenerico(campo as keyof PetEntity, valor as string);
-      return res.status(200).json(listaPets);
+      return res.status(EnumHttpStatusCode.OK).json(listaPets);
   }
 
 }

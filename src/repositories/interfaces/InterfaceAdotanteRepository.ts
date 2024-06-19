@@ -1,4 +1,3 @@
-// InterfaceAdotanteRepository.ts
 import AdotanteEntity from "../../entities/AdotanteEntity";
 import EnderecoEntity from "../../entities/EnderecoEntity";
 
