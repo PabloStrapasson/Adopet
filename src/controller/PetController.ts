@@ -1,86 +1,71 @@
 import { Request, Response } from "express";
-import type PetType from "../types/PetType";
-import EnumEspecie from "../enum/EnumEspecie";
-import EnumPorte from "../enum/EnumPorte";
 import PetRepository from "../repositories/PetRepository";
 import PetEntity from "../entities/PetEntity";
-
-let id = 0;
-function geraId() {
-  id = id + 1;
-  return id;
-}
+import { PetRequestBodyType, PetRequestParamsType, PetResponsetBodyType } from "../types/PetTypes";
+import { EnumHttpStatusCode } from "../enum/EnumHttpStatusCode";
 
 export default class PetController {
 
-    constructor(private repository:PetRepository){
+    constructor(private repository:PetRepository){ }
 
-    }
-
-    async criaPet(req:Request, res:Response) {
+    async criaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const { nome, especie, porte, adotado, dataDeNascimento } = <PetEntity>req.body;
-        if(!Object.values(EnumEspecie).includes(especie)){
-            return res.status(400).json({ erro: "especie inválida" });
-        }
-        if(!(porte && porte in EnumPorte)){
-          return res.status(400).json({ erro: "porte inválido" });
-      }
+      
         const novoPet = new PetEntity(nome, especie, dataDeNascimento, adotado, porte );
-        novoPet.id = geraId();
         novoPet.nome = nome;
         novoPet.especie = especie;
         novoPet.porte = porte
         novoPet.adotado = adotado;
         novoPet.dataDeNascimento = dataDeNascimento;
         await this.repository.criaPet(novoPet);
-        return res.status(201).json(novoPet);
+        return res.status(EnumHttpStatusCode.CREATED).json({ data: { id:novoPet.id, nome, especie, porte } });
     }
 
-    async listaPets(req:Request, res:Response) {
+    async listaPets(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const listaPets = await this.repository.listaPets();
-        return res.status(200).json(listaPets);
+        const pets = listaPets.map((pet) => {
+          return {
+            id: pet.id,
+            nome:pet.nome,
+            especie: pet.especie,
+            porte: pet.porte !== null? pet.porte: undefined,
+          }
+        })
+        return res.status(EnumHttpStatusCode.OK).json({ data: pets });
     }
 
-    async atualizaPets(req:Request, res:Response) {
+    async atualizaPets(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const { id } = req.params;
         const { success, message } = await this.repository.atualizaPet(
             Number(id),
             req.body as PetEntity
         );
 
-        if (!success) {
-            return res.status(404).json({ message });
-        }
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
-    async deletaPet(req:Request, res:Response) {
+    async deletaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
         const { id } = req.params;
 
         const { success, message } = await this.repository.deletaPet(Number(id));
 
-        if (!success) {
-          return res.status(404).json({ message });
-        }
-        return res.sendStatus(204);
+        return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
-    async adotaPet(req: Request, res: Response) {
-      const { pet_id, id_adotante } = req.params;
+    async adotaPet(req:Request<PetRequestParamsType, {}, PetRequestBodyType>, res:Response<PetResponsetBodyType>) {
+      const { pet_id, adotante_id } = req.params;
       const { success, message } = await this.repository.adotaPet(
         Number(pet_id),
-        Number(id_adotante)
+        Number(adotante_id)
       );
-      if (!success) {
-        return res.status(404).json({ message });
-      }
-      return res.sendStatus(204);
+      
+      return res.sendStatus(EnumHttpStatusCode.NO_CONTENT);
     }
 
     async buscaPetGenerico(req:Request, res:Response) {
       const { campo, valor } = req.query;
       const listaPets = await this.repository.buscaPetGenerico(campo as keyof PetEntity, valor as string);
-      return res.status(200).json(listaPets);
+      return res.status(EnumHttpStatusCode.OK).json(listaPets);
   }
 
 }
